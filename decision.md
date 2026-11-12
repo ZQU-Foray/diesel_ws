@@ -104,3 +104,37 @@ Rejected:
 - 把传输层插件提交进 `mvs-sdk`（体积大且与官方安装包重复）；
 - 公开托管 MVS 二进制（违反海康许可与组织合规）。
 
+
+---
+
+## Decision
+
+Date: 2026-11-12
+
+Context: `.repos` 此前只 pin 了两个厂商 SDK。上游 ROS 包（`pb2025_*`、`rmoss_*`、
+`sdformat_tools`、`small_gicp`）没有入账，而本地 `foray_sim_ws` 里已经有一棵**跑通过**
+仿真链的树（`foray_simulation` PR #6 / #7 的验收回执出自这棵树）。不记下来，
+这棵树只能靠 detached HEAD 考古；M2「可复现基线」也无法验收。
+
+Decision: 把 7 个上游 ROS 包写进 `src/`、`small_gicp` 写进 `third_party/`，
+**commit 取自该沙箱的实测 HEAD**（不是上游最新）。新增 `scripts/check_repos_drift.sh`，
+按 **URL** 比对工作区实际 commit 与 `.repos`。自研仓 `foray_localization` 暂不入账，留 M4。
+
+Reason:
+- pin 的依据必须是「跑通过的那一份」：换到上游最新等于把已验证基线换成未验证基线
+- 按 URL 比对而非路径：沙箱把 `small_gicp` 放 `deps/`，本仓规范是 `third_party/`，
+  同一 commit 换个挂载目录不构成漂移，路径比对会制造假阳性
+- 自研仓的 pin 必须指向 `dev` 的 commit；`foray_localization` 的实现此刻还在未合分支
+  （PR #10），pin 过去等于把未评审代码写进基线
+
+Alternatives:
+- 等 M2 正式启动再一次性整理 —— 沙箱是当前唯一证据来源，删了或重装即永久丢失
+- 只记 URL 不记 commit —— vcstool 的 `version` 字段必填，不可行
+
+Rejected:
+- 用分支名（`dev`/`main`）替代 commit —— 违反 §5.1「pin commit，不用分支」
+
+Consequences:
+- `vcs import src < .repos` 可重建等价树；漂移由脚本兜底（负向自检：改一个 pin → exit 1）
+- `mvs_sdk` 是私有仓，重建需要 GitHub 凭据；未导入时脚本报「未导入」而非漂移
+- 沙箱里多出来的 `foray_localization` 会被报「未入账」，这是 M4 之前的预期状态

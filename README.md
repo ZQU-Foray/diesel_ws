@@ -56,6 +56,7 @@ FORAY_MVS_PREFIX=/opt/foray/mvs-sdk source scripts/env.sh
 |---|---|
 | **自研仓** | 接口冻结后逐项写入 `.repos` |
 | **第三方** | vcstool · colcon · rosdep · Livox-SDK2（v1.3.1，pin commit）· MVS SDK（V4.1.2.2，私有仓 pin commit） |
+| **上游 ROS 包** | `pb2025_sentry_nav` · `pb2025_robot_description` · `rmoss_core` · `rmoss_gazebo` · `rmoss_gz_resources` · `rmoss_interfaces` · `sdformat_tools` · `small_gicp`（均 pin commit，清单见 `.repos`） |
 
 ## 接口
 
@@ -112,8 +113,9 @@ FORAY_MVS_PREFIX=/opt/foray/mvs-sdk source scripts/env.sh
 
 
 
-M1（`foray_interfaces` 最小契约集）尚未完成；`.repos` 已启用并 pin 了
-Livox-SDK2 v1.3.1 与海康 MVS SDK V4.1.2.2，自研仓仍待接口冻结后逐项加入。
+M1（`foray_interfaces` 最小契约集）尚未完成；`.repos` 已启用并 pin 了两个厂商 SDK
+与 7 个上游 ROS 包 + `small_gicp`（M2/M3 的上游部分），自研仓仍待接口冻结后逐项加入。
+`scripts/check_repos_drift.sh <workspace>` 用来确认某个工作区没有跑偏。
 
 见 `foray_docs/repository_structure.md` §8 迁移路径。
 
