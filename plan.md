@@ -8,6 +8,13 @@
     `decision.md` 2026-10-23 条目记的是首次 pin 的 `353b584`/V4.1.2.2，之后前进过两次）
   - 2026-11-12 补入 7 个上游 ROS 包 + `small_gicp`，commit 取自
     `foray_sim_ws` 里跑通过仿真链的那棵树（不是上游最新），依据见 `decision.md`
+- [x] 本仓即构建根：`vcs import --input .repos .` 后 `scripts/colcon_build.sh`
+  - 2026-11-12 起宿主直接用本仓 build/install，不再依赖临时沙箱 `foray_sim_ws`
+  - 实测：`colcon build --base-paths src --symlink-install` 24 个包通过；
+    `ros2 launch foray_simulation_bringup navigation_sim.launch.py` 起 link 正常，
+    `accept.py ready` → `ready=PASS lidar_s=0.10 localization_s=0.94`
+  - 未跑全量是因为宿主无 sudo，缺 `camera_info_manager`（`rmoss_cam` 需要），
+    临时 `--packages-skip rmoss_cam rmoss_gz_cam`；补 `rosdep install` 后应恢复全量
 - [ ] 把当前 `foray_navigation` fork 也作为 pin 项（M3）
 - [ ] 搭集成 CI（按 `.repos` 拉全量 → 全量 build）
 - [x] 写一键脚本（拉取 / 构建；启动待装配根）
