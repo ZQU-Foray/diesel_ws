@@ -3,13 +3,13 @@
 #
 # 环境变量：
 #   DIESEL_LIVOX_SDK2_PREFIX     安装前缀，默认 ~/.cache/diesel-platform-prefix/livox-sdk2
-#   DIESEL_LIVOX_SDK2_BUILD_DIR  构建目录，默认 ~/.cache/foray-build/livox-sdk2
+#   DIESEL_LIVOX_SDK2_BUILD_DIR  构建目录，默认 ~/.cache/diesel-build/livox-sdk2
 set -euo pipefail
 
 DIESEL_WS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SOURCE_DIR="$DIESEL_WS_ROOT/third_party/livox_sdk2"
 PREFIX="${DIESEL_LIVOX_SDK2_PREFIX:-$HOME/.cache/diesel-platform-prefix/livox-sdk2}"
-BUILD_DIR="${DIESEL_LIVOX_SDK2_BUILD_DIR:-$HOME/.cache/foray-build/livox-sdk2}"
+BUILD_DIR="${DIESEL_LIVOX_SDK2_BUILD_DIR:-$HOME/.cache/diesel-build/livox-sdk2}"
 LIBRARY="$PREFIX/lib/liblivox_lidar_sdk_shared.so"
 
 if [[ -f "$LIBRARY" ]]; then

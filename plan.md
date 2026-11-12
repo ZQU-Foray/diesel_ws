@@ -18,6 +18,11 @@
 - [ ] 把当前 `diesel_navigation` fork 也作为 pin 项（M3）
 - [ ] 搭集成 CI（按 `.repos` 拉全量 → 全量 build）
 - [x] 写一键脚本（拉取 / 构建；启动待装配根）
+- [x] 命名门禁 `scripts/check_naming.sh`（Diesel 迁移，CI `naming` 作业）
+  - 白名单逐条给理由：org 名、`foray_docs`、fork 后缀、战队文案/版权头、下位机两仓、
+    门户仓、教学仓，以及 P4 改名前仍需引用的 `foray_localization`
+  - 2026-11-12 实跑：11 个上位机仓全部「白名单外无 foray 残留」；
+    首跑抓到 `scripts/build_livox_sdk2.sh` 的 `~/.cache/foray-build` 两处真残留并已修
 - [ ] 打第一个整机 tag（M6）
 
 ## 当前 Agent State

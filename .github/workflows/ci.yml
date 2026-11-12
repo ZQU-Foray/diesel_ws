@@ -91,6 +91,15 @@ jobs:
             -not -path './.git/*' -print0 | \
             xargs -0 -r clang-format --dry-run --Werror
 
+  # ---- 命名门禁（Diesel 迁移）----
+  naming:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 检查 foray 残留
+        run: bash scripts/check_naming.sh
+
   # ---- Python 测试 ----
   test-python:
     runs-on: ubuntu-latest
