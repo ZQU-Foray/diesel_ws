@@ -1,34 +1,34 @@
 # .repos — 依赖清单（vcstool）
+#
+# 本文件 pin commit，不使用分支。变更必须说明理由
+# （见 foray_docs/repository_structure.md §6.3）。
+#
+# 导入：在本仓根执行 scripts/import_repos.sh（内部调用 vcs import）。
 
-> 本文件 pin **commit**，不使用分支。
-> 变更必须说明理由（见 `foray_docs/repository_structure.md` §6.3）。
-
-## 当前状态
-
-**尚未启用。** M1（`foray_interfaces` 最小契约集）完成后开始填充。
-
-迁移路径见 `foray_docs/repository_structure.md` §8：
-
-| 步 | 动作 |
-|---|---|
-| M1 | 建 `foray_interfaces`，写入最小契约集 |
-| M2 | 本仓 `.repos` 把上游包 pin 住 |
-| M3 | 把 `foray_navigation` fork 也作为 pin 项 |
-| M4 | 按依赖顺序逐个替换为自研仓 |
-| M5 | 建 `foray_robots`，兵种装配根成型 |
-| M6 | 打第一个整机 tag |
-
-## 格式（启用后）
-
-```yaml
 repositories:
-  foray_interfaces:
+  # 厂商 SDK：放在 src/ 之外，避免 colcon 识别为包。
+  # 由 scripts/build_livox_sdk2.sh 构建并安装到私有前缀。
+  third_party/livox_sdk2:
     type: git
-    url: git@github.com:ZQU-Foray/foray_interfaces.git
-    version: <commit-sha>
+    url: https://github.com/Livox-SDK/Livox-SDK2.git
+    version: f5d9375f84efe2b15bc0a052d3e18482ed13adf4  # v1.3.1
 
-  point_lio:
+  # 海康 MVS 相机 SDK：闭源，组织**私有**仓（private），只承载分发，不参与 colcon。
+  # 拉取需要 GitHub 凭据（token 或部署密钥）。
+  # 只含头文件与 amd64 主库；传输层插件不在仓内，见 scripts/install_mvs_sdk.sh --package。
+  third_party/mvs_sdk:
     type: git
-    url: git@github.com:ZQU-Foray/point_lio-foray-fork.git
-    version: <commit-sha>
-```
+    url: https://github.com/ZQU-Foray/mvs-sdk.git
+    version: b55df46b6dbbf20a21afe6885c2125620aa6209a  # SDK V4.8.0.3 + 插件/打包脚本
+
+  # 自研仓在各自 README/接口冻结后逐项加入。示例：
+  #
+  # src/foray_platform:
+  #   type: git
+  #   url: git@github.com:ZQU-Foray/foray_platform.git
+  #   version: <commit-sha>
+  #
+  # src/foray_interfaces:
+  #   type: git
+  #   url: git@github.com:ZQU-Foray/foray_interfaces.git
+  #   version: <commit-sha>
