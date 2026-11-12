@@ -4,7 +4,10 @@
 
 - [x] 写 `.repos` 骨架（先 pin 第三方上游包）
   - 已 pin Livox-SDK2 v1.3.1（commit `f5d9375f`）
-  - 已 pin 海康 MVS SDK V4.1.2.2（私有仓 `ZQU-Foray/mvs-sdk`，commit `353b584`）
+  - 已 pin 海康 MVS SDK（私有仓 `ZQU-Foray/mvs-sdk`；commit `b55df46`，SDK 4.8.0.3，
+    `decision.md` 2026-10-23 条目记的是首次 pin 的 `353b584`/V4.1.2.2，之后前进过两次）
+  - 2026-11-12 补入 7 个上游 ROS 包 + `small_gicp`，commit 取自
+    `foray_sim_ws` 里跑通过仿真链的那棵树（不是上游最新），依据见 `decision.md`
 - [ ] 把当前 `foray_navigation` fork 也作为 pin 项（M3）
 - [ ] 搭集成 CI（按 `.repos` 拉全量 → 全量 build）
 - [x] 写一键脚本（拉取 / 构建；启动待装配根）
@@ -12,7 +15,7 @@
 
 ## 当前 Agent State
 
-LIVOX_SDK_PINNED + MVS_SDK_PINNED
+LIVOX_SDK_PINNED + MVS_SDK_PINNED + UPSTREAM_PINNED
 
 ## Before Snapshot
 
@@ -27,6 +30,10 @@ risk level:    L1
 - 依赖的自研仓尚未建齐，跨仓任务需等对方 `README.md` 明确接口后再启动
 - Livox SDK2 开发机默认装到 `~/.cache/foray-platform-prefix/livox-sdk2`；
   实机镜像固定 `/opt/foray/livox-sdk2`（通过 `FORAY_LIVOX_SDK2_PREFIX` 覆盖）
+- 本地沙箱 `foray_sim_ws` 把 `small_gicp` 放在 `deps/`，本仓规范是 `third_party/`；
+  两者 commit 相同，漂移检查按 URL 比对，不把路径差异当漂移
+- 自研仓 `foray_localization` 尚未入账：它的 pin 必须指向 `dev` 的 commit，
+  而实现还在未合分支上（foray_localization PR #10），M4 再收
 - 海康 MVS SDK 开发机默认装到 `~/.cache/foray-platform-prefix/mvs-sdk`；
   实机镜像固定 `/opt/foray/mvs-sdk`（通过 `FORAY_MVS_PREFIX` 覆盖）。
   传输层插件需从海康官方安装包补齐，`mvs-sdk` 仓内不含
@@ -45,6 +52,8 @@ Commit: （首次提交）
 - [x] `.repos` 可被 vcstool 解析，Livox SDK2 pin 到 v1.3.1 commit
 - [x] `.repos` 可被 vcstool 解析，MVS SDK pin 到 V4.1.2.2 commit（私有仓需凭据）
 - [x] 提供拉取 / 构建 / 环境脚本
+- [x] `.repos` pin 住上游 ROS 包与 `small_gicp`（沙箱实测 commit）
+- [x] `scripts/check_repos_drift.sh` 能识别 commit 漂移（负向自检：改一个 pin → exit 1）
 - [ ] 本仓能独立 `colcon build`（无代码时跳过）
 - [ ] CI 绿灯
 - [ ] 每个新增模块带独立可执行测试
