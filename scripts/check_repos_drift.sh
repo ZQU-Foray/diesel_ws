@@ -20,6 +20,7 @@ if ! command -v vcs >/dev/null 2>&1; then
 fi
 
 python3 - "$FORAY_WS_ROOT/.repos" "$WORKSPACE" <<'PY'
+import os
 import re
 import subprocess
 import sys
@@ -51,6 +52,9 @@ def normalize(url):
     url = url.strip().lower()
     url = re.sub(r"^git@([^:]+):", r"https://\1/", url)
     url = re.sub(r"^ssh://git@([^/]+)/", r"https://\1/", url)
+    # 反代前缀（如 ghproxy.net/https://github.com/…）只改下载路径，不改仓库身份：
+    # 先剥掉一层，否则同一仓库会被判成「未入账」。
+    url = re.sub(r"^https?://[^/]+/https?://", "", url)
     url = re.sub(r"^https?://", "", url)
     url = re.sub(r"/+$", "", url)
     return url[:-4] if url.endswith(".git") else url
@@ -58,23 +62,28 @@ def normalize(url):
 
 expected = parse_repos(repos_path)
 
+# 本仓根自己也是一个 git 仓库，`vcs export .` 只会吐出 foray_ws 本身、不下潜；
+# 因此按 .repos 键的一级目录逐个导出（src、third_party…），再拼回带前缀的路径。
 actual = {}
-export = subprocess.run(
-    ["vcs", "export", "--exact", workspace],
-    capture_output=True,
-    text=True,
-    check=False,
-)
-if export.returncode != 0:
-    print(f"vcs export 失败：{export.stderr.strip()}", file=sys.stderr)
-    sys.exit(1)
-for raw in export.stdout.splitlines():
-    entry = re.match(r"^  (\S+):$", raw)
-    field = re.match(r"^    (url|version):\s*(\S+)$", raw)
-    if entry:
-        actual[entry.group(1)] = {}
-    elif field and actual:
-        actual[next(reversed(actual))][field.group(1)] = field.group(2)
+tops = sorted({key.split("/", 1)[0] for key in expected})
+for top in tops:
+    export = subprocess.run(
+        ["vcs", "export", "--exact", os.path.join(workspace, top)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if export.returncode != 0:
+        continue  # 目录还不存在：由 missing 分支报「未导入」
+    current = None
+    for raw in export.stdout.splitlines():
+        entry = re.match(r"^  (\S+):$", raw)
+        field = re.match(r"^    (url|version):\s*(\S+)$", raw)
+        if entry:
+            current = f"{top}/{entry.group(1)}"
+            actual[current] = {}
+        elif field and current:
+            actual[current][field.group(1)] = field.group(2)
 
 expected_by_url = {normalize(item.get("url", "")): (key, item) for key, item in expected.items()}
 actual_by_url = {normalize(item.get("url", "")): item for item in actual.values()}
