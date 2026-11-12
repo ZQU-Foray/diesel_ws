@@ -2,7 +2,7 @@
 # 校验工作区里的实际 commit 与本仓 .repos 是否一致。
 #
 # 用法：
-#   scripts/check_repos_drift.sh              # 检查本仓根（foray_ws 自己）
+#   scripts/check_repos_drift.sh              # 检查本仓根（diesel_ws 自己）
 #   scripts/check_repos_drift.sh <workspace>  # 检查任一由 .repos 长出来的工作区
 #
 # 比对按 **URL** 而非路径：本地沙箱把 small_gicp 放在 deps/，本仓规范放 third_party/，
@@ -11,15 +11,15 @@
 
 set -euo pipefail
 
-FORAY_WS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-WORKSPACE="${1:-$FORAY_WS_ROOT}"
+DIESEL_WS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+WORKSPACE="${1:-$DIESEL_WS_ROOT}"
 
 if ! command -v vcs >/dev/null 2>&1; then
     echo "缺少 vcstool：pip install vcstool" >&2
     exit 1
 fi
 
-python3 - "$FORAY_WS_ROOT/.repos" "$WORKSPACE" <<'PY'
+python3 - "$DIESEL_WS_ROOT/.repos" "$WORKSPACE" <<'PY'
 import os
 import re
 import subprocess
@@ -62,7 +62,7 @@ def normalize(url):
 
 expected = parse_repos(repos_path)
 
-# 本仓根自己也是一个 git 仓库，`vcs export .` 只会吐出 foray_ws 本身、不下潜；
+# 本仓根自己也是一个 git 仓库，`vcs export .` 只会吐出 diesel_ws 本身、不下潜；
 # 因此按 .repos 键的一级目录逐个导出（src、third_party…），再拼回带前缀的路径。
 actual = {}
 tops = sorted({key.split("/", 1)[0] for key in expected})

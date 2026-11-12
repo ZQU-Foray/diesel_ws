@@ -28,12 +28,12 @@
 
 | 仓 | commit | 说明 |
 |---|---|---|
-| `foray_interfaces` | `<sha>` | |
-| `foray_platform` | `<sha>` | |
-| `foray_localization` | `<sha>` | |
-| `foray_vision` | `<sha>` | |
-| `foray_auto_aim` | `<sha>` | |
-| `foray_navigation` | `<sha>` | |
-| `foray_decision` | `<sha>` | |
-| `foray_robots` | `<sha>` | |
+| `diesel_interfaces` | `<sha>` | |
+| `diesel_platform` | `<sha>` | |
+| `diesel_localization` | `<sha>` | |
+| `diesel_vision` | `<sha>` | |
+| `diesel_auto_aim` | `<sha>` | |
+| `diesel_navigation` | `<sha>` | |
+| `diesel_decision` | `<sha>` | |
+| `diesel_robots` | `<sha>` | |
 | 第三方 | 见 `.repos` | |

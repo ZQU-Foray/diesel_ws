@@ -32,7 +32,7 @@ Rejected:
 
 Date: 2026-10-19
 
-Context: `foray_platform_driver_livox` 直接封装 Livox SDK2，需要确定 SDK 是否
+Context: `diesel_platform_driver_livox` 直接封装 Livox SDK2，需要确定 SDK 是否
 fork 到组织、如何固定版本、开发机与实机如何取得 SDK。
 
 Decision:
@@ -43,9 +43,9 @@ Decision:
 - SDK 放在 `src/` 之外，配合 `third_party/COLCON_IGNORE` 与
   `colcon build --base-paths src`，避免被 colcon 当成包；
 - 开发机用 `scripts/build_livox_sdk2.sh` 装到
-  `~/.cache/foray-platform-prefix/livox-sdk2`；实机镜像固定
-  `/opt/foray/livox-sdk2`；
-- 驱动 CMake 默认 `FORAY_BUILD_DRIVER_LIVOX=OFF`（stub + mock）；
+  `~/.cache/diesel-platform-prefix/livox-sdk2`；实机镜像固定
+  `/opt/diesel/livox-sdk2`；
+- 驱动 CMake 默认 `DIESEL_BUILD_DRIVER_LIVOX=OFF`（stub + mock）；
   启用真实 SDK 时用 `ON` + `PREBUILT` + `LIVOX_SDK2_ROOT`。
 
 Reason:
@@ -69,7 +69,7 @@ Rejected:
 
 Date: 2026-10-23
 
-Context: `foray_platform_driver_hikvision` 需要海康 MVS SDK（闭源，无公开源码，
+Context: `diesel_platform_driver_hikvision` 需要海康 MVS SDK（闭源，无公开源码，
 无法像 Livox-SDK2 那样自行构建）。上一轮决策（2026-10-19）写明「厂商 SDK 源码/二进制
 不得入库」，对闭源 SDK 不成立：实机与 CI 必须能拿到二进制，否则无法构建真实驱动。
 
@@ -83,8 +83,8 @@ Decision:
   `third_party/mvs_sdk/scripts/install-plugins.sh` 从官方安装包按架构补齐，
   `make-bundle.sh` 可打成 tar.gz 分发；
 - 开发机用 `scripts/install_mvs_sdk.sh` 装到
-  `~/.cache/foray-platform-prefix/mvs-sdk`，实机镜像固定 `/opt/foray/mvs-sdk`；
-- 驱动 CMake 默认 `FORAY_BUILD_DRIVER_HIKVISION=OFF`（stub + mock），启用时
+  `~/.cache/diesel-platform-prefix/mvs-sdk`，实机镜像固定 `/opt/diesel/mvs-sdk`；
+- 驱动 CMake 默认 `DIESEL_BUILD_DRIVER_HIKVISION=OFF`（stub + mock），启用时
   找不到 SDK 必须 `FATAL_ERROR`。
 
 Reason:
@@ -97,7 +97,7 @@ Reason:
 
 Alternatives:
 - 只依赖系统 `/opt/MVS` 官方安装：版本不可控，CI 无法复现构建；
-- 把二进制放进 `foray_platform` 产品仓：违反分层与源码仓纯净，且下游全部拖大。
+- 把二进制放进 `diesel_platform` 产品仓：违反分层与源码仓纯净，且下游全部拖大。
 
 Rejected:
 - 把 MVS 二进制提交进任何**产品源码仓**；
@@ -112,19 +112,19 @@ Rejected:
 Date: 2026-11-12
 
 Context: `.repos` 此前只 pin 了两个厂商 SDK。上游 ROS 包（`pb2025_*`、`rmoss_*`、
-`sdformat_tools`、`small_gicp`）没有入账，而本地 `foray_sim_ws` 里已经有一棵**跑通过**
-仿真链的树（`foray_simulation` PR #6 / #7 的验收回执出自这棵树）。不记下来，
+`sdformat_tools`、`small_gicp`）没有入账，而本地 `diesel_ws` 里已经有一棵**跑通过**
+仿真链的树（`diesel_simulation` PR #6 / #7 的验收回执出自这棵树）。不记下来，
 这棵树只能靠 detached HEAD 考古；M2「可复现基线」也无法验收。
 
 Decision: 把 7 个上游 ROS 包写进 `src/`、`small_gicp` 写进 `third_party/`，
 **commit 取自该沙箱的实测 HEAD**（不是上游最新）。新增 `scripts/check_repos_drift.sh`，
-按 **URL** 比对工作区实际 commit 与 `.repos`。自研仓 `foray_localization` 暂不入账，留 M4。
+按 **URL** 比对工作区实际 commit 与 `.repos`。自研仓 `diesel_localization` 暂不入账，留 M4。
 
 Reason:
 - pin 的依据必须是「跑通过的那一份」：换到上游最新等于把已验证基线换成未验证基线
 - 按 URL 比对而非路径：沙箱把 `small_gicp` 放 `deps/`，本仓规范是 `third_party/`，
   同一 commit 换个挂载目录不构成漂移，路径比对会制造假阳性
-- 自研仓的 pin 必须指向 `dev` 的 commit；`foray_localization` 的实现此刻还在未合分支
+- 自研仓的 pin 必须指向 `dev` 的 commit；`diesel_localization` 的实现此刻还在未合分支
   （PR #10），pin 过去等于把未评审代码写进基线
 
 Alternatives:
@@ -137,14 +137,14 @@ Rejected:
 Consequences:
 - `vcs import src < .repos` 可重建等价树；漂移由脚本兜底（负向自检：改一个 pin → exit 1）
 - `mvs_sdk` 是私有仓，重建需要 GitHub 凭据；未导入时脚本报「未导入」而非漂移
-- 沙箱里多出来的 `foray_localization` 会被报「未入账」，这是 M4 之前的预期状态
+- 沙箱里多出来的 `diesel_localization` 会被报「未入账」，这是 M4 之前的预期状态
 
 ## Decision
 
 Date: 2026-11-12
 
-Context: 宿主从容器改为直接部署 ROS 2 后，编译本来依赖一个临时沙箱目录（旧 `foray_sim_ws`），
-而那棵树不在任何仓库里：删掉它，`foray_simulation` 的 launch 立刻报
+Context: 宿主从容器改为直接部署 ROS 2 后，编译本来依赖一个临时沙箱目录（旧 `diesel_ws`），
+而那棵树不在任何仓库里：删掉它，`diesel_simulation` 的 launch 立刻报
 `package 'point_lio' not found`。把沙箱的依赖清单搬进本仓 `.repos` 后，重建仍连续踩两个坑：
 `vcs import` 不跟进上游包的 submodule；`small_gicp_relocalization` 找不到 `small_gicp`
 就 `FetchContent` 去 GitHub 拉 **master**（浮动，离线直接失败）。
@@ -154,7 +154,7 @@ Decision: 构建根就是本仓本身。`scripts/import_repos.sh` 导入后自�
 `.repos` pin 住的 `third_party/small_gicp` 装进 `third_party_install/`，再用
 `FETCHCONTENT_SOURCE_DIR_SMALL_GICP` + `CMAKE_DISABLE_FIND_PACKAGE_small_gicp` 让
 `small_gicp_relocalization` 走本地源码。宿主缺系统依赖时用
-`FORAY_SKIP_PACKAGES` 显式跳过个别包，不写死 skip 列表。
+`DIESEL_SKIP_PACKAGES` 显式跳过个别包，不写死 skip 列表。
 
 Reason:
 - 沙箱不可复现：它的二进制来自容器时代，源码树又不在版本控制里，任何文档都无法重建

@@ -2,11 +2,11 @@
 # 安装海康 MVS SDK 到私有前缀。
 #
 # 与 Livox 不同，MVS 是闭源二进制，无法从源码构建：本脚本把 `.repos` pin 的
-# `third_party/mvs_sdk` 安装到私有前缀，供 foray_platform 驱动的
-# `FORAY_MVS_ROOT` 使用。
+# `third_party/mvs_sdk` 安装到私有前缀，供 diesel_platform 驱动的
+# `DIESEL_MVS_ROOT` 使用。
 #
 # 环境变量：
-#   FORAY_MVS_PREFIX   安装前缀，默认 ~/.cache/foray-platform-prefix/mvs-sdk
+#   DIESEL_MVS_PREFIX   安装前缀，默认 ~/.cache/diesel-platform-prefix/mvs-sdk
 #
 # 用法：
 #   scripts/import_repos.sh                          # 先拉取 SDK
@@ -17,9 +17,9 @@
 # 必须从海康官方 MVS Linux 安装包补齐，否则表现为枚举正常但打不开设备。
 set -euo pipefail
 
-FORAY_WS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE_DIR="$FORAY_WS_ROOT/third_party/mvs_sdk"
-PREFIX="${FORAY_MVS_PREFIX:-$HOME/.cache/foray-platform-prefix/mvs-sdk}"
+DIESEL_WS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SOURCE_DIR="$DIESEL_WS_ROOT/third_party/mvs_sdk"
+PREFIX="${DIESEL_MVS_PREFIX:-$HOME/.cache/diesel-platform-prefix/mvs-sdk}"
 PACKAGE=""
 
 while [[ $# -gt 0 ]]; do

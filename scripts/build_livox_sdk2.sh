@@ -2,14 +2,14 @@
 # 从 .repos pin 的 Livox-SDK2 源码构建并安装到私有前缀。
 #
 # 环境变量：
-#   FORAY_LIVOX_SDK2_PREFIX     安装前缀，默认 ~/.cache/foray-platform-prefix/livox-sdk2
-#   FORAY_LIVOX_SDK2_BUILD_DIR  构建目录，默认 ~/.cache/foray-build/livox-sdk2
+#   DIESEL_LIVOX_SDK2_PREFIX     安装前缀，默认 ~/.cache/diesel-platform-prefix/livox-sdk2
+#   DIESEL_LIVOX_SDK2_BUILD_DIR  构建目录，默认 ~/.cache/diesel-build/livox-sdk2
 set -euo pipefail
 
-FORAY_WS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE_DIR="$FORAY_WS_ROOT/third_party/livox_sdk2"
-PREFIX="${FORAY_LIVOX_SDK2_PREFIX:-$HOME/.cache/foray-platform-prefix/livox-sdk2}"
-BUILD_DIR="${FORAY_LIVOX_SDK2_BUILD_DIR:-$HOME/.cache/foray-build/livox-sdk2}"
+DIESEL_WS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SOURCE_DIR="$DIESEL_WS_ROOT/third_party/livox_sdk2"
+PREFIX="${DIESEL_LIVOX_SDK2_PREFIX:-$HOME/.cache/diesel-platform-prefix/livox-sdk2}"
+BUILD_DIR="${DIESEL_LIVOX_SDK2_BUILD_DIR:-$HOME/.cache/diesel-build/livox-sdk2}"
 LIBRARY="$PREFIX/lib/liblivox_lidar_sdk_shared.so"
 
 if [[ -f "$LIBRARY" ]]; then
