@@ -175,6 +175,9 @@ Rejected:
 
 Consequences:
 - `scripts/import_repos.sh` 会多花约 1.5 min 拉 submodule；离线环境需要预置
+- `image_common`（提供 `camera_info_manager`）也在同一次改动里入账：它不在 ROS 2 base
+  安装里，`rmoss_cam` 一缺就编不出，宿主又没有 sudo 装 apt 包；按源码 pin 后
+  `scripts/colcon_build.sh` 在无 sudo 的机器上也能全量通过（实测 38 个包）
 - 全量 `scripts/colcon_build.sh` 在宿主实测 31 个包通过（跳过 `rmoss_cam`/`rmoss_gz_cam`）
 - 起链回执：`ready=PASS ready_delay_s=0.94 lidar_s=0.09 localization_s=0.94
   bt_navigator=active controller_server=active last_state=OK`

@@ -59,6 +59,13 @@ repositories:
     url: https://github.com/gezp/sdformat_tools.git
     version: 47c2d1a37372281e5627d444f7537efc0bba11df
 
+  # rmoss_cam 依赖 camera_info_manager；它不在 ROS 2 base 安装里，
+  # 宿主没有 sudo 装不了 ros-humble-camera-info-manager，因此按源码 pin 入账。
+  src/image_common:
+    type: git
+    url: https://github.com/ros-perception/image_common.git
+    version: 28775054b0f85565f2a0213d2ab8a965e848dc5b
+
   # 非 colcon 依赖：small_gicp 是纯头文件 C++ 库，由 pb2025_sentry_nav 取用。
   # 本地沙箱放在 deps/small_gicp，本仓规范放 third_party/，同一 commit。
   third_party/small_gicp:

@@ -20,6 +20,7 @@
 | `rmoss_interfaces` | `424f50c831b3e74fa72446969362cdabb2e22cd1` | RMOSS 消息与服务 |
 | `sdformat_tools` | `47c2d1a37372281e5627d444f7537efc0bba11df` | SDF 转换工具 |
 | `small_gicp` | `fa0cfc983417c044b6036f71dfa448038bb9c820` | 纯头文件 GICP，供 `pb2025_sentry_nav` 取用 |
+| `image_common` | `28775054b0f85565f2a0213d2ab8a965e848dc5b` | `camera_info_manager`，供 `rmoss_cam` 取用 |
 
 ## 格式（首个 tag 后）
 

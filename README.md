@@ -35,9 +35,8 @@ scripts/install_mvs_sdk.sh --package /path/to/MVS_Linux_*.tar.gz
 if [ -d src ]; then
   rosdep install -y -r --from-paths src --ignore-src --rosdistro humble
 fi
-#    没有 sudo 时个别包装不上（例如 rmoss_cam 需要 camera_info_manager），
-#    可只跳过它们：
-#    FORAY_SKIP_PACKAGES="rmoss_cam rmoss_gz_cam" scripts/colcon_build.sh
+#    宿主没有 sudo 时可用 FORAY_SKIP_PACKAGES 跳过装不上系统依赖的包：
+#    FORAY_SKIP_PACKAGES="rmoss_gz_cam" scripts/colcon_build.sh
 
 # 6. 构建：默认驱动 stub；实机加 FORAY_LIVOX_SDK=ON
 #    small_gicp 会自动装到 third_party_install/，供 small_gicp_relocalization 使用
@@ -63,7 +62,7 @@ FORAY_MVS_PREFIX=/opt/foray/mvs-sdk source scripts/env.sh
 |---|---|
 | **自研仓** | 接口冻结后逐项写入 `.repos` |
 | **第三方** | vcstool · colcon · rosdep · Livox-SDK2（v1.3.1，pin commit）· MVS SDK（4.8.0.3，私有仓 pin commit） |
-| **上游 ROS 包** | `pb2025_sentry_nav` · `pb2025_robot_description` · `rmoss_core` · `rmoss_gazebo` · `rmoss_gz_resources` · `rmoss_interfaces` · `sdformat_tools` · `small_gicp`（均 pin commit，清单见 `.repos`） |
+| **上游 ROS 包** | `pb2025_sentry_nav` · `pb2025_robot_description` · `rmoss_core` · `rmoss_gazebo` · `rmoss_gz_resources` · `rmoss_interfaces` · `sdformat_tools` · `small_gicp` · `image_common`（均 pin commit，清单见 `.repos`） |
 
 ## 接口
 
