@@ -7,15 +7,15 @@
   - 已 pin 海康 MVS SDK（私有仓 `ZQU-Foray/mvs-sdk`；commit `b55df46`，SDK 4.8.0.3，
     `decision.md` 2026-10-23 条目记的是首次 pin 的 `353b584`/V4.1.2.2，之后前进过两次）
   - 2026-11-12 补入 7 个上游 ROS 包 + `small_gicp`，commit 取自
-    `foray_sim_ws` 里跑通过仿真链的那棵树（不是上游最新），依据见 `decision.md`
+    临时沙箱（原 `foray_sim_ws`，2026-11-12 已删除）里跑通过仿真链的那棵树（不是上游最新），依据见 `decision.md`
 - [x] 本仓即构建根：`vcs import --input .repos .` 后 `scripts/colcon_build.sh`
-  - 2026-11-12 起宿主直接用本仓 build/install，不再依赖临时沙箱 `foray_sim_ws`
+  - 2026-11-12 起宿主直接用本仓 build/install，不再依赖临时沙箱（已于 2026-11-12 删除）
   - 实测：`scripts/colcon_build.sh` 38 个包通过（含 `camera_info_manager` 源码入账）；
-    `ros2 launch foray_simulation_bringup navigation_sim.launch.py` 起 link 正常，
+    `ros2 launch diesel_simulation_bringup navigation_sim.launch.py` 起 link 正常，
     `accept.py ready` → `ready=PASS lidar_s=0.10 localization_s=0.94`
   - 未跑全量是因为宿主无 sudo，缺 `camera_info_manager`（`rmoss_cam` 需要），
     临时 `--packages-skip rmoss_cam rmoss_gz_cam`；补 `rosdep install` 后应恢复全量
-- [ ] 把当前 `foray_navigation` fork 也作为 pin 项（M3）
+- [ ] 把当前 `diesel_navigation` fork 也作为 pin 项（M3）
 - [ ] 搭集成 CI（按 `.repos` 拉全量 → 全量 build）
 - [x] 写一键脚本（拉取 / 构建；启动待装配根）
 - [ ] 打第一个整机 tag（M6）
@@ -35,14 +35,14 @@ risk level:    L1
 
 - 本仓接口尚未冻结，任务清单为**方向性**的，落地顺序以 `foray_docs/algorithm_structure.md` §9 演进阶段为准
 - 依赖的自研仓尚未建齐，跨仓任务需等对方 `README.md` 明确接口后再启动
-- Livox SDK2 开发机默认装到 `~/.cache/foray-platform-prefix/livox-sdk2`；
-  实机镜像固定 `/opt/foray/livox-sdk2`（通过 `FORAY_LIVOX_SDK2_PREFIX` 覆盖）
-- 本地沙箱 `foray_sim_ws` 把 `small_gicp` 放在 `deps/`，本仓规范是 `third_party/`；
+- Livox SDK2 开发机默认装到 `~/.cache/diesel-platform-prefix/livox-sdk2`；
+  实机镜像固定 `/opt/diesel/livox-sdk2`（通过 `DIESEL_LIVOX_SDK2_PREFIX` 覆盖）
+- 已删除的临时沙箱把 `small_gicp` 放在 `deps/`（本仓规范是 `third_party/`）；
   两者 commit 相同，漂移检查按 URL 比对，不把路径差异当漂移
-- 自研仓 `foray_localization` 尚未入账：它的 pin 必须指向 `dev` 的 commit，
-  而实现还在未合分支上（foray_localization PR #10），M4 再收
-- 海康 MVS SDK 开发机默认装到 `~/.cache/foray-platform-prefix/mvs-sdk`；
-  实机镜像固定 `/opt/foray/mvs-sdk`（通过 `FORAY_MVS_PREFIX` 覆盖）。
+- 自研仓 `diesel_localization` 尚未入账：它的 pin 必须指向 `dev` 的 commit，
+  而实现还在未合分支上（diesel_localization PR #10），M4 再收
+- 海康 MVS SDK 开发机默认装到 `~/.cache/diesel-platform-prefix/mvs-sdk`；
+  实机镜像固定 `/opt/diesel/mvs-sdk`（通过 `DIESEL_MVS_PREFIX` 覆盖）。
   传输层插件需从海康官方安装包补齐，`mvs-sdk` 仓内不含
 
 ## Vector Backend Status

@@ -1,4 +1,4 @@
-# foray_ws
+# diesel_ws
 
 > **META** · owner 角色：架构
 
@@ -16,8 +16,8 @@
 
 ```bash
 # 1. 拉取本仓
-git clone git@github.com:ZQU-Foray/foray_ws.git
-cd foray_ws
+git clone git@github.com:ZQU-Foray/diesel_ws.git
+cd diesel_ws
 
 # 2. 加载环境并拉取依赖（SDK 落在 third_party/，不进 src/）
 #    顺带初始化上游包自带的 submodule（pb2025_sentry_nav 有 7 个，含 point_lio）
@@ -35,25 +35,25 @@ scripts/install_mvs_sdk.sh --package /path/to/MVS_Linux_*.tar.gz
 if [ -d src ]; then
   rosdep install -y -r --from-paths src --ignore-src --rosdistro humble
 fi
-#    宿主没有 sudo 时可用 FORAY_SKIP_PACKAGES 跳过装不上系统依赖的包：
-#    FORAY_SKIP_PACKAGES="rmoss_gz_cam" scripts/colcon_build.sh
+#    宿主没有 sudo 时可用 DIESEL_SKIP_PACKAGES 跳过装不上系统依赖的包：
+#    DIESEL_SKIP_PACKAGES="rmoss_gz_cam" scripts/colcon_build.sh
 
-# 6. 构建：默认驱动 stub；实机加 FORAY_LIVOX_SDK=ON
+# 6. 构建：默认驱动 stub；实机加 DIESEL_LIVOX_SDK=ON
 #    small_gicp 会自动装到 third_party_install/，供 small_gicp_relocalization 使用
 scripts/colcon_build.sh
-FORAY_LIVOX_SDK=ON scripts/colcon_build.sh
+DIESEL_LIVOX_SDK=ON scripts/colcon_build.sh
 
-# 7. 运行（仿真整链；foray_simulation 是独立工作区，需单独构建并 source）
-source /path/to/foray_simulation/install/setup.bash
-ros2 launch foray_simulation_bringup navigation_sim.launch.py headless:=true
-python3 /path/to/foray_simulation/src/foray_simulation_bringup/scripts/accept.py ready
+# 7. 运行（仿真整链；diesel_simulation 是独立工作区，需单独构建并 source）
+source /path/to/diesel_simulation/install/setup.bash
+ros2 launch diesel_simulation_bringup navigation_sim.launch.py headless:=true
+python3 /path/to/diesel_simulation/src/diesel_simulation_bringup/scripts/accept.py ready
 ```
 
-实机 SDK 前缀：Livox `/opt/foray/livox-sdk2`，MVS `/opt/foray/mvs-sdk`：
+实机 SDK 前缀：Livox `/opt/diesel/livox-sdk2`，MVS `/opt/diesel/mvs-sdk`：
 
 ```bash
-FORAY_LIVOX_SDK2_PREFIX=/opt/foray/livox-sdk2 source scripts/env.sh
-FORAY_MVS_PREFIX=/opt/foray/mvs-sdk source scripts/env.sh
+DIESEL_LIVOX_SDK2_PREFIX=/opt/diesel/livox-sdk2 source scripts/env.sh
+DIESEL_MVS_PREFIX=/opt/diesel/mvs-sdk source scripts/env.sh
 ```
 
 ## 依赖
@@ -119,7 +119,7 @@ FORAY_MVS_PREFIX=/opt/foray/mvs-sdk source scripts/env.sh
 
 
 
-M1（`foray_interfaces` 最小契约集）尚未完成；`.repos` 已启用并 pin 了两个厂商 SDK
+M1（`diesel_interfaces` 最小契约集）尚未完成；`.repos` 已启用并 pin 了两个厂商 SDK
 与 7 个上游 ROS 包 + `small_gicp`（M2/M3 的上游部分），自研仓仍待接口冻结后逐项加入。
 `scripts/check_repos_drift.sh <workspace>` 用来确认某个工作区没有跑偏。
 

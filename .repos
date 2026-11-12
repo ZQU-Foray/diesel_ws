@@ -75,12 +75,12 @@ repositories:
 
   # 自研仓在各自 README/接口冻结后逐项加入。示例：
   #
-  # src/foray_platform:
+  # src/diesel_platform:
   #   type: git
-  #   url: git@github.com:ZQU-Foray/foray_platform.git
+  #   url: git@github.com:ZQU-Foray/diesel_platform.git
   #   version: <commit-sha>
   #
-  # src/foray_interfaces:
+  # src/diesel_interfaces:
   #   type: git
-  #   url: git@github.com:ZQU-Foray/foray_interfaces.git
+  #   url: git@github.com:ZQU-Foray/diesel_interfaces.git
   #   version: <commit-sha>
