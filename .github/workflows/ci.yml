@@ -97,8 +97,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 检查 foray 残留
+      - name: 检查旧命名残留
         run: bash scripts/check_naming.sh
+
+      # 自检：注入一条非白名单残留，门禁必须报错。白名单为空时 grep -Ev ""
+      # 会匹配所有行、门禁退化成「永远通过」，这一步就是拦这个。
+      - name: 门禁自检（必须能抓到残留）
+        shell: bash
+        run: |
+          printf 'name: foray_probe\n' > tmp_naming_probe.yaml
+          git add -N tmp_naming_probe.yaml
+          if bash scripts/check_naming.sh; then
+            echo "::error::命名门禁没有抓到注入的残留，门禁已失效"
+            exit 1
+          fi
+          git rm -q --cached tmp_naming_probe.yaml
+          rm -f tmp_naming_probe.yaml
 
   # ---- Python 测试 ----
   test-python:
