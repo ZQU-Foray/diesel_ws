@@ -31,9 +31,11 @@ compile_commands.json
 *~
 .DS_Store
 
-# ---- 第三方依赖（vcstool 拉取，不入库） ----
+# ---- 依赖（vcstool 按 .repos 拉取，不入库） ----
+src/
 third_party/livox_sdk2/
 third_party/mvs_sdk/
+third_party/small_gicp/
 
 # ---- 运行期产物 ----
 *.bag
@@ -44,3 +46,4 @@ recordings/
 # ---- 本地参数覆盖（不得提交标定值） ----
 local/
 *.local.yaml
+third_party_install/
