@@ -20,6 +20,7 @@ git clone git@github.com:ZQU-Foray/foray_ws.git
 cd foray_ws
 
 # 2. 加载环境并拉取依赖（SDK 落在 third_party/，不进 src/）
+#    顺带初始化上游包自带的 submodule（pb2025_sentry_nav 有 7 个，含 point_lio）
 source scripts/env.sh
 scripts/import_repos.sh
 
@@ -34,13 +35,18 @@ scripts/install_mvs_sdk.sh --package /path/to/MVS_Linux_*.tar.gz
 if [ -d src ]; then
   rosdep install -y -r --from-paths src --ignore-src --rosdistro humble
 fi
+#    宿主没有 sudo 时可用 FORAY_SKIP_PACKAGES 跳过装不上系统依赖的包：
+#    FORAY_SKIP_PACKAGES="rmoss_gz_cam" scripts/colcon_build.sh
 
 # 6. 构建：默认驱动 stub；实机加 FORAY_LIVOX_SDK=ON
+#    small_gicp 会自动装到 third_party_install/，供 small_gicp_relocalization 使用
 scripts/colcon_build.sh
 FORAY_LIVOX_SDK=ON scripts/colcon_build.sh
 
-# 7. 运行
-# （待装配根就绪后补充）
+# 7. 运行（仿真整链；foray_simulation 是独立工作区，需单独构建并 source）
+source /path/to/foray_simulation/install/setup.bash
+ros2 launch foray_simulation_bringup navigation_sim.launch.py headless:=true
+python3 /path/to/foray_simulation/src/foray_simulation_bringup/scripts/accept.py ready
 ```
 
 实机 SDK 前缀：Livox `/opt/foray/livox-sdk2`，MVS `/opt/foray/mvs-sdk`：
@@ -56,7 +62,7 @@ FORAY_MVS_PREFIX=/opt/foray/mvs-sdk source scripts/env.sh
 |---|---|
 | **自研仓** | 接口冻结后逐项写入 `.repos` |
 | **第三方** | vcstool · colcon · rosdep · Livox-SDK2（v1.3.1，pin commit）· MVS SDK（4.8.0.3，私有仓 pin commit） |
-| **上游 ROS 包** | `pb2025_sentry_nav` · `pb2025_robot_description` · `rmoss_core` · `rmoss_gazebo` · `rmoss_gz_resources` · `rmoss_interfaces` · `sdformat_tools` · `small_gicp`（均 pin commit，清单见 `.repos`） |
+| **上游 ROS 包** | `pb2025_sentry_nav` · `pb2025_robot_description` · `rmoss_core` · `rmoss_gazebo` · `rmoss_gz_resources` · `rmoss_interfaces` · `sdformat_tools` · `small_gicp` · `image_common`（均 pin commit，清单见 `.repos`） |
 
 ## 接口
 

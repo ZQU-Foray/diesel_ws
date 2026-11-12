@@ -12,6 +12,19 @@ fi
 cd "$FORAY_WS_ROOT"
 vcs import --input "$FORAY_WS_ROOT/.repos" "$FORAY_WS_ROOT"
 
+# 上游包自己带 submodule（pb2025_sentry_nav 有 7 个：point_lio、livox_ros_driver2、
+# small_gicp_relocalization 等）。vcs 只 checkout 父仓，不会跟进 submodule，
+# 缺了它们 point_lio 等包根本不存在，仿真链会在 launch 阶段报 package not found。
+submodules=0
+while IFS= read -r gitdir; do
+    repo="$(dirname "$gitdir")"
+    if [[ -f "$repo/.gitmodules" ]]; then
+        echo "初始化 submodule：${repo#"$FORAY_WS_ROOT"/}"
+        git -C "$repo" submodule update --init --recursive
+        submodules=$((submodules + 1))
+    fi
+done < <(find "$FORAY_WS_ROOT/src" -maxdepth 3 -name .git -prune)
+
 if [[ -d "$FORAY_WS_ROOT/src/third_party/livox_sdk2" ]]; then
     echo "错误：SDK 被导入到 src/，请检查 .repos 的键名与导入根目录" >&2
     exit 1
@@ -29,4 +42,4 @@ if [[ ! -f "$FORAY_WS_ROOT/third_party/mvs_sdk/include/MvCameraControl.h" ]]; th
     exit 1
 fi
 
-echo "依赖已导入：third_party/livox_sdk2、third_party/mvs_sdk"
+echo "依赖已导入：third_party/livox_sdk2、third_party/mvs_sdk；初始化了 $submodules 个带 submodule 的上游仓"

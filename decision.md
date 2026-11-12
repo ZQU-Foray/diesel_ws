@@ -138,3 +138,49 @@ Consequences:
 - `vcs import src < .repos` 可重建等价树；漂移由脚本兜底（负向自检：改一个 pin → exit 1）
 - `mvs_sdk` 是私有仓，重建需要 GitHub 凭据；未导入时脚本报「未导入」而非漂移
 - 沙箱里多出来的 `foray_localization` 会被报「未入账」，这是 M4 之前的预期状态
+
+## Decision
+
+Date: 2026-11-12
+
+Context: 宿主从容器改为直接部署 ROS 2 后，编译本来依赖一个临时沙箱目录（旧 `foray_sim_ws`），
+而那棵树不在任何仓库里：删掉它，`foray_simulation` 的 launch 立刻报
+`package 'point_lio' not found`。把沙箱的依赖清单搬进本仓 `.repos` 后，重建仍连续踩两个坑：
+`vcs import` 不跟进上游包的 submodule；`small_gicp_relocalization` 找不到 `small_gicp`
+就 `FetchContent` 去 GitHub 拉 **master**（浮动，离线直接失败）。
+
+Decision: 构建根就是本仓本身。`scripts/import_repos.sh` 导入后自动对带 `.gitmodules`
+的上游仓执行 `git submodule update --init --recursive`；`scripts/colcon_build.sh` 先把
+`.repos` pin 住的 `third_party/small_gicp` 装进 `third_party_install/`，再用
+`FETCHCONTENT_SOURCE_DIR_SMALL_GICP` + `CMAKE_DISABLE_FIND_PACKAGE_small_gicp` 让
+`small_gicp_relocalization` 走本地源码。宿主缺系统依赖时用
+`FORAY_SKIP_PACKAGES` 显式跳过个别包，不写死 skip 列表。
+
+Reason:
+- 沙箱不可复现：它的二进制来自容器时代，源码树又不在版本控制里，任何文档都无法重建
+- submodule 是上游包自己的 pin，本仓 `.repos` 只管到父仓 commit，不补这一层就等于
+  缺了 `point_lio` 等 7 个包——这是「pin 了却编不出」的假闭环
+- `FetchContent` 的 `GIT_TAG master` 违反 §5.1「pin commit，不用分支」，必须绕开
+- 上游 CMake 认裸目标名 `small_gicp`，pin 住的 small_gicp 导出 `small_gicp::small_gicp`；
+  让 `find_package` 命中只会得到 `-lsmall_gicp` 而丢 include，因此固定走 FetchContent
+
+Alternatives:
+- 把 7 个 submodule 也写进 `.repos` —— 它们嵌在父仓目录内，会让 `vcs import` 与父仓
+  checkout 打架；上游已经用 submodule pin 住，跟随即可
+- 用 `--packages-skip` 写死在脚本里 —— 宿主差异被固化进仓库，别人换了机器反而编不全
+
+Rejected:
+- 继续依赖外部沙箱目录 —— 用户已要求清理，且它不是仓库、不可复现
+- 关掉 `small_gicp_relocalization` —— 它是重定位链路的一部分，砍掉等于砍需求
+
+Consequences:
+- `scripts/import_repos.sh` 会多花约 1.5 min 拉 submodule；离线环境需要预置
+- `image_common`（提供 `camera_info_manager`）也在同一次改动里入账：它不在 ROS 2 base
+  安装里，`rmoss_cam` 一缺就编不出，宿主又没有 sudo 装 apt 包；按源码 pin 后
+  `scripts/colcon_build.sh` 在无 sudo 的机器上也能全量通过（实测 38 个包）
+- 全量 `scripts/colcon_build.sh` 在宿主实测 31 个包通过（跳过 `rmoss_cam`/`rmoss_gz_cam`）
+- 起链回执：`ready=PASS ready_delay_s=0.94 lidar_s=0.09 localization_s=0.94
+  bt_navigator=active controller_server=active last_state=OK`
+- **已知未决**：同一棵树里 `accept.py a2` 的 `max_xy_err` 为 4.7~6.2 m（yaw 27°~120°），
+  配准无「无有效对应」、退化仅 2/6 级、`lost=0`，与 M11 时的 0.039 m 不符，
+  怀疑与点云/物理参数（新编 `rmoss_gz_plugins`/`point_lio`）或 truth 帧对齐有关，待查

@@ -21,7 +21,7 @@ repositories:
     url: https://github.com/ZQU-Foray/mvs-sdk.git
     version: b55df46b6dbbf20a21afe6885c2125620aa6209a  # SDK V4.8.0.3 + 插件/打包脚本
 
-  # 上游 ROS 包（colcon 构建）：pin 到本地沙箱 foray_sim_ws 实测可跑通的 commit，
+  # 上游 ROS 包（colcon 构建）：pin 到本仓 src/ 实测可跑通仿真链的 commit，
   # 不是「上游最新」。依据见 decision.md（2026-11-12）与 foray_docs §8 M2/M3。
   # 目录名与沙箱 src/ 完全一致，vcs import 后可零改动重建。
   src/pb2025_sentry_nav:
@@ -58,6 +58,13 @@ repositories:
     type: git
     url: https://github.com/gezp/sdformat_tools.git
     version: 47c2d1a37372281e5627d444f7537efc0bba11df
+
+  # rmoss_cam 依赖 camera_info_manager；它不在 ROS 2 base 安装里，
+  # 宿主没有 sudo 装不了 ros-humble-camera-info-manager，因此按源码 pin 入账。
+  src/image_common:
+    type: git
+    url: https://github.com/ros-perception/image_common.git
+    version: 28775054b0f85565f2a0213d2ab8a965e848dc5b
 
   # 非 colcon 依赖：small_gicp 是纯头文件 C++ 库，由 pb2025_sentry_nav 取用。
   # 本地沙箱放在 deps/small_gicp，本仓规范放 third_party/，同一 commit。
