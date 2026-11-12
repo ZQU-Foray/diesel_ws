@@ -21,6 +21,51 @@ repositories:
     url: https://github.com/ZQU-Foray/mvs-sdk.git
     version: b55df46b6dbbf20a21afe6885c2125620aa6209a  # SDK V4.8.0.3 + 插件/打包脚本
 
+  # 上游 ROS 包（colcon 构建）：pin 到本地沙箱 foray_sim_ws 实测可跑通的 commit，
+  # 不是「上游最新」。依据见 decision.md（2026-11-12）与 foray_docs §8 M2/M3。
+  # 目录名与沙箱 src/ 完全一致，vcs import 后可零改动重建。
+  src/pb2025_sentry_nav:
+    type: git
+    url: https://github.com/SMBU-PolarBear-Robotics-Team/pb2025_sentry_nav.git
+    version: 5f645d60e8cb88440f0bb44fc63209f136a95a49  # fork 基线，含 point_lio
+
+  src/pb2025_robot_description:
+    type: git
+    url: https://github.com/SMBU-PolarBear-Robotics-Team/pb2025_robot_description.git
+    version: a0541dddcbfe376f369a6345b532a10923ad9149  # pb2025 步兵/哨兵 xmacro
+
+  src/rmoss_core:
+    type: git
+    url: https://github.com/SMBU-PolarBear-Robotics-Team/rmoss_core.git
+    version: 8209ec517dfbb7ecac613cf0c9534d67ff918b7d
+
+  src/rmoss_gazebo:
+    type: git
+    url: https://github.com/SMBU-PolarBear-Robotics-Team/rmoss_gazebo.git
+    version: 7443ff06c345752d0e23172c479d99b27207e2c7
+
+  src/rmoss_gz_resources:
+    type: git
+    url: https://github.com/SMBU-PolarBear-Robotics-Team/rmoss_gz_resources.git
+    version: b5c759f08844dfda19c79aa870866ace8d4c7b3a
+
+  src/rmoss_interfaces:
+    type: git
+    url: https://github.com/SMBU-PolarBear-Robotics-Team/rmoss_interfaces.git
+    version: 424f50c831b3e74fa72446969362cdabb2e22cd1
+
+  src/sdformat_tools:
+    type: git
+    url: https://github.com/gezp/sdformat_tools.git
+    version: 47c2d1a37372281e5627d444f7537efc0bba11df
+
+  # 非 colcon 依赖：small_gicp 是纯头文件 C++ 库，由 pb2025_sentry_nav 取用。
+  # 本地沙箱放在 deps/small_gicp，本仓规范放 third_party/，同一 commit。
+  third_party/small_gicp:
+    type: git
+    url: https://github.com/koide3/small_gicp.git
+    version: fa0cfc983417c044b6036f71dfa448038bb9c820
+
   # 自研仓在各自 README/接口冻结后逐项加入。示例：
   #
   # src/foray_platform:
