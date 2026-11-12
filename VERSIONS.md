@@ -11,7 +11,7 @@
 | 依赖 | commit | 说明 |
 |---|---|---|
 | Livox-SDK2 | `f5d9375f84efe2b15bc0a052d3e18482ed13adf4` | v1.3.1；由 `scripts/build_livox_sdk2.sh` 构建安装 |
-| MVS SDK（海康） | `353b584614f42fc286b9f684735f6479401e63d6` | V4.1.2.2；私有仓 `ZQU-Foray/mvs-sdk`，由 `scripts/install_mvs_sdk.sh` 安装 |
+| MVS SDK（海康） | `b55df46b6dbbf20a21afe6885c2125620aa6209a` | 4.8.0.3（Build 20260512）；私有仓 `ZQU-Foray/mvs-sdk`，由 `scripts/install_mvs_sdk.sh` 安装 |
 | `pb2025_sentry_nav` | `5f645d60e8cb88440f0bb44fc63209f136a95a49` | 上游 fork 基线（含 point_lio） |
 | `pb2025_robot_description` | `a0541dddcbfe376f369a6345b532a10923ad9149` | pb2025 步兵 / 哨兵 xmacro |
 | `rmoss_core` | `8209ec517dfbb7ecac613cf0c9534d67ff918b7d` | RMOSS 基础设施 |

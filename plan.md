@@ -4,7 +4,8 @@
 
 - [x] 写 `.repos` 骨架（先 pin 第三方上游包）
   - 已 pin Livox-SDK2 v1.3.1（commit `f5d9375f`）
-  - 已 pin 海康 MVS SDK V4.1.2.2（私有仓 `ZQU-Foray/mvs-sdk`，commit `353b584`）
+  - 已 pin 海康 MVS SDK（私有仓 `ZQU-Foray/mvs-sdk`；commit `b55df46`，SDK 4.8.0.3，
+    `decision.md` 2026-10-23 条目记的是首次 pin 的 `353b584`/V4.1.2.2，之后前进过两次）
   - 2026-11-12 补入 7 个上游 ROS 包 + `small_gicp`，commit 取自
     `foray_sim_ws` 里跑通过仿真链的那棵树（不是上游最新），依据见 `decision.md`
 - [ ] 把当前 `foray_navigation` fork 也作为 pin 项（M3）

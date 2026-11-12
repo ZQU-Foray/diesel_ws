@@ -55,7 +55,7 @@ FORAY_MVS_PREFIX=/opt/foray/mvs-sdk source scripts/env.sh
 | 类型 | 依赖 |
 |---|---|
 | **自研仓** | 接口冻结后逐项写入 `.repos` |
-| **第三方** | vcstool · colcon · rosdep · Livox-SDK2（v1.3.1，pin commit）· MVS SDK（V4.1.2.2，私有仓 pin commit） |
+| **第三方** | vcstool · colcon · rosdep · Livox-SDK2（v1.3.1，pin commit）· MVS SDK（4.8.0.3，私有仓 pin commit） |
 | **上游 ROS 包** | `pb2025_sentry_nav` · `pb2025_robot_description` · `rmoss_core` · `rmoss_gazebo` · `rmoss_gz_resources` · `rmoss_interfaces` · `sdformat_tools` · `small_gicp`（均 pin commit，清单见 `.repos`） |
 
 ## 接口
