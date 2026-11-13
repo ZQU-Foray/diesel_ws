@@ -21,8 +21,10 @@
 - [x] 命名门禁 `scripts/check_naming.sh`（Diesel 迁移，CI `naming` 作业）
   - 白名单逐条给理由：org 名、`foray_docs`、fork 后缀、战队文案/版权头、下位机两仓、
     门户仓、教学仓，以及 P4 改名前仍需引用的 `foray_localization`
-  - 2026-11-12 实跑：11 个上位机仓全部「白名单外无 foray 残留」；
+  - 2026-11-12 实跑：11 个上位机仓全部「白名单外无旧命名残留」；
     首跑抓到 `scripts/build_livox_sdk2.sh` 的 `~/.cache/foray-build` 两处真残留并已修
+  - 同日发现门禁本身是空壳（白名单赋值丢失 ⇒ `grep -Ev ""` 放行一切），已修复并加
+    CI 负向自检；修复后逐仓复跑仍是 11 仓 exit 0，见 `decision.md` 2026-11-12 条目
 - [ ] 打第一个整机 tag（M6）
 
 ## 当前 Agent State
