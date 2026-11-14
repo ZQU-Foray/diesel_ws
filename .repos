@@ -73,14 +73,27 @@ repositories:
     url: https://github.com/koide3/small_gicp.git
     version: fa0cfc983417c044b6036f71dfa448038bb9c820
 
-  # 自研仓在各自 README/接口冻结后逐项加入。示例：
-  #
-  # src/diesel_platform:
-  #   type: git
-  #   url: git@github.com:ZQU-Foray/diesel_platform.git
-  #   version: <commit-sha>
-  #
-  # src/diesel_interfaces:
-  #   type: git
-  #   url: git@github.com:ZQU-Foray/diesel_interfaces.git
-  #   version: <commit-sha>
+  # 自研仓：pin 到 dev 上已过 CI 的 commit。改这里必须同时改 VERSIONS.md，
+  # 由 scripts/check_repos_drift.sh 校验工作区是否与清单一致。
+  # 顺序按依赖自下而上：interfaces（X2）→ platform（L1/L2）→ vision_frontend（L3）
+  # → vision_backend（L4）。
+  src/diesel_interfaces:
+    type: git
+    url: https://github.com/ZQU-Foray/diesel_interfaces.git
+    version: 752f8a4  # 视觉前后端契约 v0.1.0 草案（PR #5）
+
+  src/diesel_platform:
+    type: git
+    url: https://github.com/ZQU-Foray/diesel_platform.git
+    version: 58e617f  # diesel 命名收敛（PR #7）；提供 diesel_platform_core
+
+  # 视觉前后端分家后的两个仓：前端 = 检测 + PnP，后端 = 融合 + 跟踪 + 瞄准。
+  src/diesel_vision_frontend:
+    type: git
+    url: https://github.com/ZQU-Foray/diesel_vision_frontend.git
+    version: ac11181  # 多目标检测抽象（Detector/registry）
+
+  src/diesel_vision_backend:
+    type: git
+    url: https://github.com/ZQU-Foray/diesel_vision_backend.git
+    version: b97bed6  # 多源融合与 WorldSnapshot（PR #10）

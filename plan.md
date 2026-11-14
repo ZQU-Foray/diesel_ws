@@ -71,3 +71,9 @@ Commit: （首次提交）
 - [ ] 本仓能独立 `colcon build`（无代码时跳过）
 - [ ] CI 绿灯
 - [ ] 每个新增模块带独立可执行测试
+
+## 2026-11-14 自研仓入账（I8）
+
+视觉前后端分家完成后，`.repos` 首次 pin 自研仓：`diesel_interfaces@752f8a4`、
+`diesel_platform@58e617f`、`diesel_vision_frontend@ac11181`、`diesel_vision_backend@b97bed6`；
+`VERSIONS.md` 自研仓表改为新仓名。其余自研仓仍待接口冻结后逐项加入。

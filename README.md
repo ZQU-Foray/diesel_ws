@@ -60,7 +60,7 @@ DIESEL_MVS_PREFIX=/opt/diesel/mvs-sdk source scripts/env.sh
 
 | 类型 | 依赖 |
 |---|---|
-| **自研仓** | 接口冻结后逐项写入 `.repos` |
+| **自研仓** | `diesel_interfaces` · `diesel_platform` · `diesel_vision_frontend` · `diesel_vision_backend`（均已 pin dev commit，其余仓待接口冻结后逐项加入） |
 | **第三方** | vcstool · colcon · rosdep · Livox-SDK2（v1.3.1，pin commit）· MVS SDK（4.8.0.3，私有仓 pin commit） |
 | **上游 ROS 包** | `pb2025_sentry_nav` · `pb2025_robot_description` · `rmoss_core` · `rmoss_gazebo` · `rmoss_gz_resources` · `rmoss_interfaces` · `sdformat_tools` · `small_gicp` · `image_common`（均 pin commit，清单见 `.repos`） |
 
@@ -119,8 +119,10 @@ DIESEL_MVS_PREFIX=/opt/diesel/mvs-sdk source scripts/env.sh
 
 
 
-M1（`diesel_interfaces` 最小契约集）尚未完成；`.repos` 已启用并 pin 了两个厂商 SDK
-与 7 个上游 ROS 包 + `small_gicp`（M2/M3 的上游部分），自研仓仍待接口冻结后逐项加入。
+M1 已推进到视觉前后端契约（`diesel_interfaces` `protocol/vision.yaml` 草案 v0.1.0）；
+`.repos` pin 了两个厂商 SDK、7 个上游 ROS 包 + `small_gicp`，以及四个自研仓
+（`diesel_interfaces`/`diesel_platform`/`diesel_vision_frontend`/`diesel_vision_backend`）。
+其余自研仓仍待接口冻结后逐项加入。
 `scripts/check_repos_drift.sh <workspace>` 用来确认某个工作区没有跑偏。
 
 见 `foray_docs/repository_structure.md` §8 迁移路径。

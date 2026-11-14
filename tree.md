@@ -12,7 +12,7 @@
 ├── CODEOWNERS               Review 自动分派
 ├── .diesel-layer             所属层与依赖边界（CI 校验）
 ├── .repos                   依赖清单（vcstool，pin commit）
-├── VERSIONS.md              整机 tag 与第三方 pin
+├── VERSIONS.md              整机 tag、第三方与自研仓 pin
 ├── .gitignore
 ├── scripts/
 │   ├── env.sh               环境变量（LIVOX_SDK2_ROOT / MVS_ROOT / LD_LIBRARY_PATH）

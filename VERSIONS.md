@@ -7,6 +7,9 @@
 
 - 整机 tag：尚未产生（M6）。
 - 第三方 pin：见下表，完整清单以 `.repos` 为准（2026-11-12 补入 7 个上游 ROS 包 + `small_gicp`）。
+- 自研仓 pin（2026-11-14 视觉前后端分家后首次入账）：`diesel_interfaces` `752f8a4`、
+  `diesel_platform` `58e617f`、`diesel_vision_frontend` `ac11181`、`diesel_vision_backend` `b97bed6`。
+  这四个仓的 dev 均已过 CI；其余自研仓仍待接口冻结后按同样方式入账。
 
 | 依赖 | commit | 说明 |
 |---|---|---|
@@ -31,8 +34,8 @@
 | `diesel_interfaces` | `<sha>` | |
 | `diesel_platform` | `<sha>` | |
 | `diesel_localization` | `<sha>` | |
-| `diesel_vision` | `<sha>` | |
-| `diesel_auto_aim` | `<sha>` | |
+| `diesel_vision_frontend` | `<sha>` | 检测 + PnP |
+| `diesel_vision_backend` | `<sha>` | 融合 + 跟踪 + 瞄准 |
 | `diesel_navigation` | `<sha>` | |
 | `diesel_decision` | `<sha>` | |
 | `diesel_robots` | `<sha>` | |

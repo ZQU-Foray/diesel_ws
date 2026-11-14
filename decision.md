@@ -210,3 +210,38 @@ Alternatives:
 
 Rejected:
 - 在门禁里放行「含旧名的注释行」：等于给残留开后门，且注释行里也出现过真残留
+
+## Decision/Date: 2026-11-14
+
+Context:
+
+视觉前后端分家后，两个仓改名（`diesel_vision`→`diesel_vision_frontend`、
+`diesel_auto_aim`→`diesel_vision_backend`），并新增了 `diesel_interfaces` 的视觉契约。
+`.repos` 里自研仓一直是注释示例、`VERSIONS.md` 的自研仓表还是旧仓名，整机 tag 一旦开始
+打就无从复现。
+
+Decision:
+
+`.repos` 按依赖自下而上 pin 四个自研仓到各自 dev 上已过 CI 的 commit：
+`diesel_interfaces@752f8a4`（视觉契约 v0.1.0 草案）、`diesel_platform@58e617f`（提供
+`diesel_platform_core`）、`diesel_vision_frontend@ac11181`（多目标检测抽象）、
+`diesel_vision_backend@b97bed6`（融合与 WorldSnapshot）。`VERSIONS.md` 的自研仓表同步改为
+新仓名并记同一组 commit。
+
+Reason:
+
+- 后端现在 link `diesel_platform::link`，前端要 ONNX Runtime：只 pin 两个视觉仓而不 pin
+  它们真正的依赖，`vcs import` 出来的工作区根本编不过。
+- pin commit 而不是分支，是因为整机 tag 要能复现；分支会漂。
+- 两个仓的 dev 都已过四项 CI，pin 它们等于 pin 一个可验证的状态。
+
+Alternatives:
+- 只 pin 视觉前后端两仓：工作区缺 `diesel_platform_core`，后端配置阶段就失败
+- pin 分支 `dev`：无需随提交更新，但整机 tag 失去可复现性
+
+Rejected:
+- 继续把自研仓留在注释里：`.repos` 看起来完整，实际拉不出可构建的工作区
+
+Source:
+- PR #8/#2（两仓收敛）→ 仓改名 → PR #9/#3（仓名与包名迁移）
+- PR #5（`diesel_interfaces` 视觉契约）、PR #10（`diesel_vision_backend` 融合与快照）
